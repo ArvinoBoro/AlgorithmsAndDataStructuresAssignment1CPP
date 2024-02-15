@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1707957640 source:c:\users\arvin\documents\algorithmsanddatastructures\assignment1\main.cpp
+	<iostream>
+	<fstream>
+	<vector>
+	<string>
+
