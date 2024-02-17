@@ -10,13 +10,14 @@ using namespace std;
 
 void insert_product();                                // Function prototypes
 void update_attribute();
-void delete_attribute();
+void delete_product();
 void search_attribute();
-void sort_attributes();
+void sort_products();
 void display_products();
 void write_to_file();
 
 vector<vector<string>> matrix;                          // Declare a global 2D vector
+bool sorted = false;
 
 
 std::string toLowercase(const std::string& str) {
@@ -65,38 +66,52 @@ int main()
 
     fin.close();                                        // Close the currently open text file
 
-    int user_option;
 
-    cout << "(1) Insert" << '\n';
-    cout << "(2) Update" << '\n';
-    cout << "(3) Delete" << '\n';
-    cout << "(4) Search" << '\n';
-    cout << "(5) Sort" << '\n';
-    cout << "(6) Display Products" << '\n';
-    cout << "(7) Write to text file" << '\n';
-    cout << "Please select an option: ";
+    while (true) {
 
-    cin >> user_option;
+        int user_option;
 
-    switch (user_option) {
-        case 1:
-            insert_product();
-            display_products();
-        case 2:
-            update_attribute();
-        case 3:
-            delete_attribute();
-        case 4:
-            search_attribute();
-        case 5:
-            sort_attributes();
-        case 6:
-            display_products();
-        case 7:
-            write_to_file();
+        cout << "(1) Insert" << '\n';
+        cout << "(2) Update" << '\n';
+        cout << "(3) Delete" << '\n';
+        cout << "(4) Search" << '\n';
+        cout << "(5) Sort" << '\n';
+        cout << "(6) Display Products" << '\n';
+        cout << "(7) Write to text file" << '\n';
+        cout << "(8) Exit" << '\n';
+        cout << "Please select an option: ";
 
+        cin >> user_option;
+
+        switch (user_option) {
+            case 1:
+                insert_product();
+                break;
+            case 2:
+                update_attribute();
+                break;
+            case 3:
+                delete_product();
+                break;
+            case 4:
+                search_attribute();
+                break;
+            case 5:
+                sort_products();
+                break;
+            case 6:
+                display_products();
+                break;
+            case 7:
+                write_to_file();
+                break;
+            case 8:
+                return 0;
+            default:
+                cout << "Invalid option. Please try again. \n";
+                break;
+        }
     }
-    return 0;
 }
 
 void insert_product() {
@@ -150,7 +165,7 @@ void update_attribute() {
 
 }
 
-void delete_attribute() {
+void delete_product() {
 
     int position;
 
@@ -158,7 +173,6 @@ void delete_attribute() {
     cin >> position;
 
     matrix.erase(matrix.begin() + position - 1);
-
 }
 
 
@@ -166,9 +180,8 @@ void search_attribute() {
 
     int search_term;
     int result_count = 0;
+    vector<int> matched_product_indices;
     string content;
-
-
 
     cout << "(1) ID\n";
     cout << "(2) Name\n";
@@ -183,34 +196,86 @@ void search_attribute() {
     cin >> content;
     cout << '\n';
 
-    if (is_sorted) {
+    if (sorted && (search_term == 3 )) {
 
-        int mid = floor((matrix.size() + 1) / 2 )
+        int i = 1;
+        int j = matrix.size();
+        int k = 0;
+        float price = stof(content);
 
-        if ()
-    }
+        while (i < j) {
+
+            int mid = floor((i + j) / 2 );
+
+            if (price > stof(matrix[mid-1][2]))
+                i = mid + 1;
+
+            else
+                j = mid;
+        }
+
+        if (price == stof(matrix[i-1][2])) {
+
+            for (int k = 0; price == stoi(matrix[i + k][2]); k++)
+
+                matched_product_indices.push_back(i+k);
+
+
+            for (int l = -2; price == stof(matrix[i + l][2]); l--)
+
+                matched_product_indices.push_back(i+l);
+
+
+            for (int m = 0; m < matched_product_indices.size(); m++) {
+
+                cout << matrix[matched_product_indices[m]][0] << " ";
+                cout << matrix[matched_product_indices[m]][1] << " ";
+                cout << matrix[matched_product_indices[m]][2] << " ";
+                cout << matrix[matched_product_indices[m]][3] << "\n\n";
+            }
+
+        } else {
+
+            cout << "No results found.\n\n";
+        }
 
     } else {
 
         for (int i = 0; i < matrix.size(); i++) {
 
-        if (toLowercase( matrix[i][search_term - 1] ) == toLowercase(content)  ) {
+            if (toLowercase( matrix[i][search_term - 1] ) == toLowercase(content)  ) {
 
-            result_count++;
-            cout << "Search result " << result_count << ":\n";
-            cout << matrix[i][0] << " ";
-            cout << matrix[i][1] << " ";
-            cout << matrix[i][2] << " ";
-            cout << matrix[i][3] << "\n\n";
+                result_count++;
+                cout << matrix[i][0] << " ";
+                cout << matrix[i][1] << " ";
+                cout << matrix[i][2] << " ";
+                cout << matrix[i][3] << "\n\n";
 
+            }
         }
 
+        if (result_count == 0)
+            cout << "No results found.\n\n";
     }
 
 }
 
-void sort_attributes() {
 
+void sort_products() {
+
+    for (int i = 0; i < matrix.size()-1; i++) {
+        for (int j = 0; j < matrix.size()-i-1; j++) {
+
+            if (stoi(matrix[j][2]) > stoi(matrix[j+1][2])) {
+
+                vector<string> temp = matrix[j];
+                matrix[j] = matrix[j+1];
+                matrix[j + 1] = temp;
+            }
+        }
+    }
+
+    sorted = true;
 }
 
 
@@ -228,7 +293,7 @@ void display_products() {
         for (int j = 0; j < matrix[j].size(); j++) {
             cout << matrix[i][j] << "  ";
         }
-        cout << '\n';
+        cout << "\n";
     }
 
 }
