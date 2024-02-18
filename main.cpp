@@ -202,7 +202,9 @@ void search_attribute() {
 }
 
 
-void sort_products() {              // Bubble sort algorithm
+void sort_products() {
+
+    bool swapped = false;
 
     for (int i = 0; i < matrix.size()-1; i++) {                     // Iterates over every element in the matrix except the last
 
@@ -210,10 +212,14 @@ void sort_products() {              // Bubble sort algorithm
 
             if (stof(matrix[j][2]) > stof(matrix[j+1][2])) {       // Checks if the price of the vector indexed by j is greater than the vector indexed by j+1
 
+                swapped = true;
                 vector<string> temp = matrix[j];
                 matrix[j] = matrix[j+1];
                 matrix[j + 1] = temp;                               // Swaps the vector indexed by j and the vector indexed by j+1
             }
+        }
+        if (!swapped) {                                             // Breaks the unnested loop if there were no swaps in the first pass
+            break;
         }
     }
 }
@@ -235,7 +241,7 @@ void display_products() {
 
             cout << matrix[i][j] << "  ";               // Adds a space between each attribute in the same product
         }
-        cout << "\n\n";
+        cout << "\n";
     }
 
 }
